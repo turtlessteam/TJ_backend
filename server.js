@@ -4,10 +4,10 @@ const path = require("path");
 var cors = require("cors");
 require("dotenv").config();
 
-app.use(cors());
-
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(cors());
 
 // 🔹 배포된 클라우드 서버의 URL (⚠️ .env 파일에서 설정해야 함!)
 const BASE_URL = process.env.BASE_URL;
