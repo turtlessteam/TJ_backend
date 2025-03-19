@@ -17,22 +17,25 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 
 // 🔹 제목(title)로 이미지 검색
 const searchImageByTitle = (title) => {
-  const imagesDir = path.join(__dirname, "images");
-  if (!fs.existsSync(imagesDir)) return null;
-
-  console.log("title", title);
-  const files = fs
-    .readdirSync(imagesDir)
-    .filter(
+    const imagesDir = path.join(__dirname, "images");
+    if (!fs.existsSync(imagesDir)) return null;
+  
+    console.log("🔍 Checking images directory:", imagesDir);
+    
+    // 폴더 내 모든 파일을 출력
+    const allFiles = fs.readdirSync(imagesDir);
+    console.log("📂 All files in images folder:", allFiles);
+  
+    const files = allFiles.filter(
       (file) =>
         file.toLowerCase().includes(title.toLowerCase()) &&
         path.extname(file).toLowerCase() === ".webp"
     );
-
-  console.log("files", files);
-
-  return files.length > 0 ? encodeURI(`${BASE_URL}/images/${files[0]}`) : null;
-};
+  
+    console.log("🎯 Matched files:", files);
+  
+    return files.length > 0 ? encodeURI(`${BASE_URL}/images/${files[0]}`) : null;
+  };  
 
 // 🔹 이미지 검색 API
 app.get("/images", (req, res) => {
