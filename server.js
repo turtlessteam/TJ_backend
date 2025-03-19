@@ -9,33 +9,34 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 
-// 🔹 배포된 클라우드 서버의 URL (⚠️ .env 파일에서 설정해야 함!)
-const BASE_URL = process.env.BASE_URL;
+// 🔹 환경 변수에서 BASE_URL 가져오기
+const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
 
-// 🔹 정적 파일 제공 (이미지를 직접 제공)
+// 🔹 정적 파일 제공
 app.use("/images", express.static(path.join(__dirname, "images")));
 
-// 🔹 제목(title)로 이미지 검색
+// 🔹 제목(title)로 이미지 검색 (모든 확장자 허용)
 const searchImageByTitle = (title) => {
-    const imagesDir = path.join(__dirname, "images");
-    if (!fs.existsSync(imagesDir)) return null;
-  
-    console.log("🔍 Checking images directory:", imagesDir);
-    
-    // 폴더 내 모든 파일을 출력
-    const allFiles = fs.readdirSync(imagesDir);
-    console.log("📂 All files in images folder:", allFiles);
-  
-    const files = allFiles.filter(
-      (file) =>
-        file.toLowerCase().includes(title.toLowerCase()) &&
-        path.extname(file).toLowerCase() === ".webp"
-    );
-  
-    console.log("🎯 Matched files:", files);
-  
-    return files.length > 0 ? encodeURI(`${BASE_URL}/images/${files[0]}`) : null;
-  };  
+  const imagesDir = path.join(__dirname, "images");
+  if (!fs.existsSync(imagesDir)) return null;
+
+  console.log("🔍 Searching for:", title);
+
+  // 🔹 폴더 내 모든 파일 가져오기
+  const files = fs.readdirSync(imagesDir);
+  console.log("📂 Files in images folder:", files);
+
+  // 🔹 title을 포함하는 파일 찾기 (확장자 제한 없음)
+  const matchedFiles = files.filter((file) =>
+    file.toLowerCase().includes(title.toLowerCase())
+  );
+
+  console.log("🎯 Matched files:", matchedFiles);
+
+  return matchedFiles.length > 0
+    ? encodeURI(`${BASE_URL}/images/${matchedFiles[0]}`)
+    : null;
+};
 
 // 🔹 이미지 검색 API
 app.get("/images", (req, res) => {
@@ -54,5 +55,5 @@ app.get("/images", (req, res) => {
 
 // 🔹 서버 실행
 app.listen(PORT, () => {
-  console.log(`Server is running on ${BASE_URL}`);
+  console.log(`🚀 Server is running on ${BASE_URL}`);
 });
