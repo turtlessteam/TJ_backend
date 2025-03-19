@@ -17,9 +17,14 @@ const searchImageByTitle = (title) => {
   const imagesDir = path.join(__dirname, "images");
   if (!fs.existsSync(imagesDir)) return null;
 
-  const files = fs.readdirSync(imagesDir).filter((file) => 
-    file.toLowerCase().includes(title.toLowerCase()) && path.extname(file).toLowerCase() === ".webp"
-  );
+  console.log("title", title);
+  const files = fs
+    .readdirSync(imagesDir)
+    .filter(
+      (file) =>
+        file.toLowerCase().includes(title.toLowerCase()) &&
+        path.extname(file).toLowerCase() === ".webp"
+    );
 
   return files.length > 0 ? encodeURI(`${BASE_URL}/images/${files[0]}`) : null;
 };
