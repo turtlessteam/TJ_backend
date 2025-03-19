@@ -29,6 +29,8 @@ const searchImageByTitle = (title) => {
         path.extname(file).toLowerCase() === ".webp"
     );
 
+  console.log("files", files);
+
   return files.length > 0 ? encodeURI(`${BASE_URL}/images/${files[0]}`) : null;
 };
 
