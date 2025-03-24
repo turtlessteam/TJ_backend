@@ -38,6 +38,28 @@ const searchImageByTitle = (title) => {
     : null;
 };
 
+const searchRankImageByTitle = (title) => {
+  const imagesDir = path.join(__dirname, "rankImages");
+  if (!fs.existsSync(imagesDir)) return null;
+
+  console.log("🔍 Searching for:", title);
+
+  // 🔹 폴더 내 모든 파일 가져오기
+  const files = fs.readdirSync(imagesDir);
+  console.log("📂 Files in images folder:", files);
+
+  // 🔹 title을 포함하는 파일 찾기 (확장자 제한 없음)
+  const matchedFiles = files.filter((file) =>
+    file.toLowerCase().includes(title.toLowerCase())
+  );
+
+  console.log("🎯 Matched files:", matchedFiles);
+
+  return matchedFiles.length > 0
+    ? encodeURI(`${BASE_URL}/images/${matchedFiles[0]}`)
+    : null;
+};
+
 // 🔹 이미지 검색 API
 app.get("/images", (req, res) => {
   const title = req.query.title;
@@ -46,6 +68,21 @@ app.get("/images", (req, res) => {
   }
 
   const imageUrl = searchImageByTitle(title);
+  if (!imageUrl) {
+    return res.status(404).json({ message: "No matching image found" });
+  }
+
+  res.json({ imageUrl });
+});
+
+// 🔹 랭크 이미지 검색 API
+app.get("/rank/images", (req, res) => {
+  const title = req.query.title;
+  if (!title) {
+    return res.status(400).json({ error: "Title parameter is required" });
+  }
+
+  const imageUrl = searchRankImageByTitle(title);
   if (!imageUrl) {
     return res.status(404).json({ message: "No matching image found" });
   }
