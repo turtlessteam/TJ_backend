@@ -75,6 +75,7 @@ app.get("/images", (req, res) => {
   res.json({ imageUrl });
 });
 
+/*
 // 🔹 랭크 이미지 검색 API
 app.get("/rank/images", (req, res) => {
   const title = req.query.title;
@@ -89,6 +90,7 @@ app.get("/rank/images", (req, res) => {
 
   res.json({ imageUrl });
 });
+*/
 
 // 🔹 서버 실행
 app.listen(PORT, () => {
